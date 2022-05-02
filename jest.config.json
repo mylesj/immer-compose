@@ -1,0 +1,14 @@
+{
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "restoreMocks": true,
+    "timers": "modern",
+    "moduleNameMapper": {
+        "~/(.*)": "<rootDir>/src/$1"
+    },
+    "collectCoverageFrom": [
+        "<rootDir>/src/**/*.{ts,tsx}",
+        "!<rootDir>/node_modules/**"
+    ],
+    "setupFiles": ["./jest.setup.js"]
+}
