@@ -6,10 +6,11 @@ export type AnyArray = unknown[]
 export type ComposeTask<Recipe, State, Args extends AnyArray = unknown[]> = (
     state: State,
     ...args: Args[]
-) => Promise<Recipe> | Recipe | void
+) => Promise<Recipe | void> | Recipe | void
 
 export type ComposeRecipe<State> = (draft: Draft<State>) => Draft<State> | void
 
+// not following why produceWithPatches has a different return signature :/
 export type ComposeWithPatchesRecipe<State> = (
     draft: Draft<State>
 ) => State | void

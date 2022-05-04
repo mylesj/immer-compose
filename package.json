@@ -1,7 +1,7 @@
 {
     "name": "immer-compose",
     "version": "0.0.0-development",
-    "description": "A utility for composing concurrent operations, the results of which mergeable to a single deterministic state update.",
+    "description": "A utility for composing concurrent operations, yet allowing resulting state to be merged in series.",
     "author": "mylesj <hi@mylesj.dev>",
     "license": "MIT",
     "repository": "github:mylesj/immer-compose",
@@ -21,7 +21,8 @@
         "merged",
         "mergeable",
         "combine",
-        "rebase"
+        "rebase",
+        "middleware"
     ],
     "main": "dist/module.js",
     "module": "dist/module.mjs",
