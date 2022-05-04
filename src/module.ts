@@ -1,1 +1,1 @@
-export { compose } from './compose'
+export { compose, composeWithPatches } from './compose'

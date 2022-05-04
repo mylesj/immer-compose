@@ -72,4 +72,17 @@ describe(compose.name, () => {
         jest.runAllTimers()
         expect(await runner).toStrictEqual([1, 2, 3])
     })
+
+    it('should skip over tasks that return undefined', async () => {
+        const reduce = compose<number[]>(
+            () => (draft) => {
+                draft.push(1)
+            },
+            () => undefined,
+            () => (draft) => {
+                draft.push(3)
+            }
+        )
+        expect(await reduce([])).toStrictEqual([1, 3])
+    })
 })

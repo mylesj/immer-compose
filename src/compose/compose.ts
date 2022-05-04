@@ -1,12 +1,12 @@
 import { produce } from 'immer'
 
-import { AnyArray, ComposeTask } from '~/types'
+import { AnyArray, ComposeTask, ComposeRecipe } from '~/types'
 
 import { isFunction } from '~/util'
 
 export const compose =
     <State, Args extends AnyArray = unknown[]>(
-        ...tasks: ComposeTask<State, Args>[]
+        ...tasks: ComposeTask<ComposeRecipe<State>, State, Args>[]
     ) =>
     async (state: State, ...args: Args[]): Promise<State> => {
         const recipes = await Promise.all(
