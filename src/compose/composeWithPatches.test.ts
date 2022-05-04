@@ -26,7 +26,16 @@ describe(composeWithPatches.name, () => {
         expect(task).toHaveBeenCalledWith(input, 1, 2, 3)
     })
 
-    it('should handle basic composition of regular functions', async () => {
+    it('should not mutate the initial state', async () => {
+        const initial = {}
+        const reduce = composeWithPatches<Arbitrary>(() => (draft) => {
+            draft.a = 1
+        })
+        const [newState] = await reduce(initial)
+        expect(newState).not.toBe(initial)
+    })
+
+    it('should handle basic composition of functions', async () => {
         const reduce = composeWithPatches<Arbitrary>(() => (draft) => {
             draft.a = 1
         })
@@ -34,6 +43,20 @@ describe(composeWithPatches.name, () => {
         expect(state).toStrictEqual({
             a: 1,
         })
+    })
+
+    it('should skip over tasks that return undefined', async () => {
+        const reduce = composeWithPatches<number[]>(
+            () => (draft) => {
+                draft.push(1)
+            },
+            () => undefined,
+            () => (draft) => {
+                draft.push(3)
+            }
+        )
+        const [state] = await reduce([])
+        expect(state).toStrictEqual([1, 3])
     })
 
     it('should handle composition of async functions', async () => {
@@ -80,20 +103,6 @@ describe(composeWithPatches.name, () => {
         expect(state).toStrictEqual([1, 2, 3])
     })
 
-    it('should skip over tasks that return undefined', async () => {
-        const reduce = composeWithPatches<number[]>(
-            () => (draft) => {
-                draft.push(1)
-            },
-            () => undefined,
-            () => (draft) => {
-                draft.push(3)
-            }
-        )
-        const [state] = await reduce([])
-        expect(state).toStrictEqual([1, 3])
-    })
-
     it('should return updates as patches', async () => {
         const reduce = composeWithPatches<Arbitrary>(
             () => () => ({}),
@@ -136,5 +145,56 @@ describe(composeWithPatches.name, () => {
             { op: 'add', path: ['test'], value: 'test' },
             { op: 'remove', path: ['hello'] },
         ])
+    })
+
+    it('should process thunk recipes eagerly', async () => {
+        const createSignal = () => {
+            let trigger: (v?: unknown) => void
+            const step = new Promise((resolve) => {
+                trigger = resolve
+            })
+            return [jest.fn(() => trigger()), step] as const
+        }
+
+        const [signal1, step1] = createSignal()
+        const [signal2, step2] = createSignal()
+        const [signal3, step3] = createSignal()
+
+        const reduce = composeWithPatches<number[]>(
+            async () => {
+                await delay(50)
+                return () => {
+                    signal1()
+                }
+            },
+            async () => {
+                await delay(150)
+                return () => {
+                    signal2()
+                }
+            },
+            async () => {
+                await delay(250)
+                return () => {
+                    signal3()
+                }
+            }
+        )
+
+        reduce([])
+
+        jest.advanceTimersByTime(100)
+        await step1
+        expect(signal1).toHaveBeenCalled()
+        expect(signal2).not.toHaveBeenCalled()
+
+        jest.advanceTimersByTime(100)
+        await step2
+        expect(signal2).toHaveBeenCalled()
+        expect(signal3).not.toHaveBeenCalled()
+
+        jest.advanceTimersByTime(100)
+        await step3
+        expect(signal3).toHaveBeenCalled()
     })
 })

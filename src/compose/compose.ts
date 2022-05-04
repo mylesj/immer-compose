@@ -9,17 +9,16 @@ export const compose =
         ...tasks: ComposeTask<ComposeRecipe<State>, State, Args>[]
     ) =>
     async (state: State, ...args: Args[]): Promise<State> => {
-        const recipes = await Promise.all(
-            tasks.map((task) => task(state, ...args))
-        )
+        const recipes = tasks.map((task) => task(state, ...args))
 
         let newState = state
         for (const recipe of recipes) {
-            if (recipe === undefined || !isFunction(recipe)) {
+            const thunk = await recipe
+            if (thunk === undefined || !isFunction(thunk)) {
                 continue
             }
 
-            newState = await produce(newState, recipe)
+            newState = await produce(newState, thunk)
         }
 
         return newState

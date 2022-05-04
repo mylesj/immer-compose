@@ -11,21 +11,20 @@ export const composeWithPatches =
         state: State,
         ...args: Args[]
     ): Promise<[State, Patch[], Patch[]]> => {
-        const recipes = await Promise.all(
-            tasks.map((task) => task(state, ...args))
-        )
+        const recipes = tasks.map((task) => task(state, ...args))
 
         let newState = state
         const patches: Patch[] = []
         const reversed: Patch[] = []
         for (const recipe of recipes) {
-            if (recipe === undefined || !isFunction(recipe)) {
+            const thunk = await recipe
+            if (thunk === undefined || !isFunction(thunk)) {
                 continue
             }
 
             const [next, patch, reverse] = await produceWithPatches(
                 newState,
-                recipe
+                thunk
             )
             newState = next
             patches.push(...patch)
