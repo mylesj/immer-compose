@@ -37,7 +37,7 @@ The functions `compose` and `composeWithPatches` are exposed mirroring the _prod
 by immer. Note that to use patches, it is still required that you import `enablePatches` from `immer` -
 this module assumes nothing about which version you are using.
 
-Compose functions are higher-order functions that can execute any asynchronous task and in-turn
+Compose arguments are higher-order functions that can execute any asynchronous task and in-turn
 return an immer recipe - where each recipe will consume a draft of the previous state in the chain.
 
 ```typescript
