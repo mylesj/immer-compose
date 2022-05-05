@@ -57,6 +57,8 @@ const pipeline = compose(higherOrderRecipe /* [, 0..*] */)
 const newState = pipeline(state, 1, 2, 3)
 ```
 
+-   [StackBlitz Demo][stackblitz]
+
 ## Experimental &nbsp;⚠️
 
 ```typescript
@@ -87,6 +89,7 @@ code transpilers like Babel.
 
 [immer]: https://immerjs.github.io/immer/
 [json-schema]: https://json-schema.org/
+[stackblitz]: https://stackblitz.com/edit/immer-compose?file=index.mjs&view=editor
 
 <!-- images -->
 
