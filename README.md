@@ -51,6 +51,24 @@ const pipeline = compose(higherOrderRecipe /* [, 0..*] */)
 const newState = pipeline(state, 1, 2, 3)
 ```
 
+## Experimental ⚠️
+
+```typescript
+const experimental = async () => async () => {}
+```
+
+If a recipe is returned as an async function, the compose function will prioritise the order of
+the synchronous recipes before processing the remaining tasks on a first-come first-serve basis.
+Effectively allowing middleware to self-determine whether to keep a slot in the queue or go last.
+
+The implementation should be reliable in modern environments but should be considered experimental
+as I don't know where I want to take this idea yet and also don't know how much utility it really
+has - I'm just playing around.
+
+This behaviour is reliant on `async` functions and won't work with normal functions returning
+promises - due to this, it also won't work if you're targeting `es5` through code transpilers
+like Babel.
+
 <!-- -->
 
 [immer]: https://immerjs.github.io/immer/

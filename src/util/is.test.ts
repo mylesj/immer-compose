@@ -1,4 +1,4 @@
-import { isFunction } from './is'
+import { isFunction, isAsyncFunction } from './is'
 
 const arrowFn = () => {
     /* noop */
@@ -26,5 +26,17 @@ describe(isFunction.name, () => {
         ${asyncExpressionFn} | ${true}
     `('should return $expected for $input', ({ input, expected }) => {
         expect(isFunction(input)).toBe(expected)
+    })
+})
+
+describe(isAsyncFunction.name, () => {
+    it.each`
+        input                | expected
+        ${arrowFn}           | ${false}
+        ${expressionFn}      | ${false}
+        ${asyncArrowFn}      | ${true}
+        ${asyncExpressionFn} | ${true}
+    `('should return $expected for $input', ({ input, expected }) => {
+        expect(isAsyncFunction(input)).toBe(expected)
     })
 })
