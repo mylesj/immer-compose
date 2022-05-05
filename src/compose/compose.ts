@@ -4,7 +4,6 @@ import {
     AnyArray,
     AnyObject,
     ComposeTask,
-    ThunkRecipe,
     ThunkRecipeSync,
     ThunkRecipeAsync,
 } from '~/types'
@@ -19,7 +18,7 @@ import {
 
 export const compose =
     <State extends AnyObject | AnyArray, Args extends AnyArray = unknown[]>(
-        ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
+        ...tasks: ComposeTask<State, Args>[]
     ) =>
     async (state: State, ...args: Args[]): Promise<State> => {
         const recipes = tasks.map((task) => task(immutable(state), ...args))

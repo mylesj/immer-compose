@@ -1,12 +1,8 @@
-import { Immutable } from 'immer'
-
 import { AnyObject, AnyArray } from '~/types'
 
 import { isObject } from './is'
 
-export const immutable = <T extends AnyObject | AnyArray>(
-    obj: T
-): Immutable<T> => {
+export const immutable = <T extends AnyObject | AnyArray>(obj: T): T => {
     const proxy = new Proxy(obj, {
         get(...args) {
             const target = Reflect.get(...args)
@@ -17,5 +13,5 @@ export const immutable = <T extends AnyObject | AnyArray>(
         },
     })
 
-    return (<unknown>proxy) as Immutable<T>
+    return (<unknown>proxy) as T
 }
