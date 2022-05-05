@@ -1,10 +1,10 @@
-import { Draft, Patch } from 'immer'
+import { Draft, Patch, Immutable } from 'immer'
 
 export type AnyObject = Record<string, unknown>
 export type AnyArray = unknown[]
 
 export type ComposeTask<Recipe, State, Args extends AnyArray = unknown[]> = (
-    state: State,
+    state: Immutable<State>,
     ...args: Args[]
 ) => Promise<Recipe | void> | Recipe | void
 
@@ -20,18 +20,21 @@ export type ThunkRecipeAsync<State> = (
     draft: Draft<State>
 ) => Promise<Draft<State> | void>
 
-export declare const compose: <State, Args extends AnyArray = unknown[]>(
+export declare const compose: <
+    State extends AnyObject | AnyArray,
+    Args extends AnyArray = unknown[]
+>(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<(state: State, ...args: Args[]) => Promise<State>>
 
-export type Patches = Patch[]
-export type InversePatches = Patch[]
-
 export declare const composeWithPatches: <
-    State,
+    State extends AnyObject | AnyArray,
     Args extends AnyArray = unknown[]
 >(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<
     (state: State, ...args: Args[]) => Promise<[State, Patches, InversePatches]>
 >
+
+export type Patches = Patch[]
+export type InversePatches = Patch[]

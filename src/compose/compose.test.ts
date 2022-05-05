@@ -40,6 +40,28 @@ describe(compose.name, () => {
         })
     })
 
+    it('pass the initial state to the higher order function', async () => {
+        const reduce = compose<Arbitrary>((initial) => (draft) => {
+            draft.a = 1 + Number(initial.a)
+        })
+        expect(await reduce({ a: 1 })).toStrictEqual({
+            a: 2,
+        })
+    })
+
+    it('the initial state should be immutable', async () => {
+        const reduce = compose<Arbitrary>((initial) => {
+            // eslint-disable-next-line
+            tryCatch(() => ((initial as any).a = 10))
+            return (draft) => {
+                draft.a = 1 + Number(initial.a)
+            }
+        })
+        expect(await reduce({ a: 1 })).toStrictEqual({
+            a: 2,
+        })
+    })
+
     it('should skip over tasks that return undefined', async () => {
         const reduce = compose<number[]>(
             () => (draft) => {
