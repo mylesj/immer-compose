@@ -1,11 +1,18 @@
 import { produceWithPatches, Patch } from 'immer'
 
-import { AnyArray, ComposeTask, ComposeWithPatchesRecipe } from '~/types'
-import { isFunction } from '~/util'
+import {
+    AnyArray,
+    ComposeTask,
+    ThunkRecipe,
+    ThunkRecipeSync,
+    ThunkRecipeAsync,
+} from '~/types'
+
+import { isFunction, isAsyncFunction, watchUpdates } from '~/util'
 
 export const composeWithPatches =
     <State, Args extends AnyArray = unknown[]>(
-        ...tasks: ComposeTask<ComposeWithPatchesRecipe<State>, State, Args>[]
+        ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
     ) =>
     async (
         state: State,
@@ -16,16 +23,32 @@ export const composeWithPatches =
         let newState = state
         const patches: Patch[] = []
         const reversed: Patch[] = []
+        const deferred: ThunkRecipeAsync<State>[] = []
         for (const recipe of recipes) {
             const thunk = await recipe
+
             if (thunk === undefined || !isFunction(thunk)) {
+                continue
+            }
+
+            if (isAsyncFunction(thunk)) {
+                deferred.push(<ThunkRecipeAsync<State>>thunk)
                 continue
             }
 
             const [next, patch, reverse] = await produceWithPatches(
                 newState,
-                thunk
+                <ThunkRecipeSync<State>>thunk
             )
+
+            newState = next
+            patches.push(...patch)
+            reversed.push(...reverse)
+        }
+
+        for await (const [next, patch, reverse] of watchUpdates(
+            deferred.map((thunk) => produceWithPatches(newState, thunk))
+        )) {
             newState = next
             patches.push(...patch)
             reversed.push(...reverse)

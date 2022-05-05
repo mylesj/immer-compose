@@ -197,4 +197,43 @@ describe(composeWithPatches.name, () => {
         await step3
         expect(signal3).toHaveBeenCalled()
     })
+
+    it('should defer async recipes and resolve first-come-first-server', async () => {
+        const reduce = composeWithPatches<number[]>(
+            async () => {
+                await delay(1000)
+                return (draft) => {
+                    draft.push(1)
+                }
+            },
+            async () => {
+                await delay(100)
+                return async (draft) => {
+                    draft.push(2)
+                }
+            },
+            async () => {
+                await delay(500)
+                return (draft) => {
+                    draft.push(3)
+                }
+            }
+        )
+
+        const runner = reduce([])
+        jest.runAllTimers()
+        expect(await runner).toStrictEqual([
+            [1, 3, 2],
+            [
+                { op: 'add', path: [0], value: 1 },
+                { op: 'add', path: [1], value: 3 },
+                { op: 'add', path: [2], value: 2 },
+            ],
+            [
+                { op: 'replace', path: ['length'], value: 0 },
+                { op: 'replace', path: ['length'], value: 1 },
+                { op: 'replace', path: ['length'], value: 2 },
+            ],
+        ])
+    })
 })

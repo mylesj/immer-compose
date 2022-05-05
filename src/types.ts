@@ -8,15 +8,20 @@ export type ComposeTask<Recipe, State, Args extends AnyArray = unknown[]> = (
     ...args: Args[]
 ) => Promise<Recipe | void> | Recipe | void
 
-export type ComposeRecipe<State> = (draft: Draft<State>) => Draft<State> | void
+export type ThunkRecipe<State> =
+    | ThunkRecipeSync<State>
+    | ThunkRecipeAsync<State>
 
-// not following why produceWithPatches has a different return signature :/
-export type ComposeWithPatchesRecipe<State> = (
+export type ThunkRecipeSync<State> = (
     draft: Draft<State>
-) => State | void
+) => void | Draft<State>
+
+export type ThunkRecipeAsync<State> = (
+    draft: Draft<State>
+) => Promise<Draft<State> | void>
 
 export declare const compose: <State, Args extends AnyArray = unknown[]>(
-    ...tasks: ComposeTask<ComposeRecipe<State>, State, Args>[]
+    ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<(state: State, ...args: Args[]) => Promise<State>>
 
 export type Patches = Patch[]
@@ -26,7 +31,7 @@ export declare const composeWithPatches: <
     State,
     Args extends AnyArray = unknown[]
 >(
-    ...tasks: ComposeTask<ComposeWithPatchesRecipe<State>, State, Args>[]
+    ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<
     (state: State, ...args: Args[]) => Promise<[State, Patches, InversePatches]>
 >
