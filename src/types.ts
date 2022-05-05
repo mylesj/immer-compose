@@ -22,7 +22,7 @@ export type ThunkRecipeAsync<State> = (
 
 export declare const compose: <State, Args extends AnyArray = unknown[]>(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
-) => Promise<(state: State, ...args: Args[]) => Promise<State>>
+) => Promise<(state: State, ...args: Args) => Promise<State>>
 
 export declare const composeWithPatches: <
     State,
@@ -30,7 +30,7 @@ export declare const composeWithPatches: <
 >(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<
-    (state: State, ...args: Args[]) => Promise<[State, Patches, InversePatches]>
+    (state: State, ...args: Args) => Promise<[State, Patches, InversePatches]>
 >
 
 export type Patches = Patch[]
