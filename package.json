@@ -1,7 +1,7 @@
 {
     "name": "immer-compose",
     "version": "0.0.0-development",
-    "description": "A utility for composing concurrent operations, yet allowing resulting state to be merged in series.",
+    "description": "A utility for composing concurrent operations, yet allowing state to be merged in series.",
     "author": "mylesj <hi@mylesj.dev>",
     "license": "MIT",
     "repository": "github:mylesj/immer-compose",

@@ -1,6 +1,12 @@
+[![NPM Package Version][shield-npm-version]][npm]
+[![GitHub Repository][shield-github]][repo]
+[![Changelog][shield-changelog]][releases]
+[![GitHub Workflow Status (main)][shield-ci-main]][status-ci-main]
+[![Test Coverage][shield-coverage]][codacy-dashboard]
+
 # immer-compose
 
-> _A utility for composing concurrent operations, yet allowing resulting state to be merged in series._
+> _A utility for composing concurrent operations, yet allowing state to be merged in series._
 
 ## Install / Prerequisites
 
@@ -69,7 +75,23 @@ This behaviour is reliant on `async` functions and won't work with normal functi
 promises - due to this, it also won't work if you're targeting `es5` through code transpilers
 like Babel.
 
-<!-- -->
+<!-- project links -->
+
+[npm]: https://www.npmjs.com/package/immer-compose
+[repo]: https://github.com/mylesj/immer-compose
+[releases]: https://github.com/mylesj/immer-compose/releases
+[status-ci-main]: https://github.com/mylesj/immer-compose/actions/workflows/integration.yml?query=branch%3Amain
+[codacy-dashboard]: https://app.codacy.com/gh/mylesj/immer-compose/dashboard?branch=main
+
+<!-- external links -->
 
 [immer]: https://immerjs.github.io/immer/
 [json-schema]: https://json-schema.org/
+
+<!-- images -->
+
+[shield-github]: https://img.shields.io/badge/%20-Source-555555?logo=github&style=for-the-badge
+[shield-changelog]: https://img.shields.io/badge/%20-Changelog-555555?logo=github&style=for-the-badge
+[shield-ci-main]: https://img.shields.io/github/workflow/status/mylesj/immer-compose/CI/main?label=CI&logo=github&style=for-the-badge
+[shield-npm-version]: https://img.shields.io/npm/v/immer-compose?&label=%20&logo=npm&style=for-the-badge
+[shield-coverage]: https://img.shields.io/codacy/coverage/f2547f2ac77e44f6a6190d813da6c8b9/main?logo=codacy&style=for-the-badge
