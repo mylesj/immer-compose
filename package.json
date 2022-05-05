@@ -28,7 +28,7 @@
     "module": "dist/module.mjs",
     "types": "dist/types.d.ts",
     "scripts": {
-        "prepare": "husky install",
+        "prepare": "husky install && patch-package",
         "prebuild": "rimraf dist",
         "build": "rollup --config rollup.config.ts --configPlugin typescript",
         "postbuild": "tsc --declaration --emitDeclarationOnly --removeComments ./src/types.ts --outDir ./dist",
