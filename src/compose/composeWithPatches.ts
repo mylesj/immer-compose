@@ -9,7 +9,13 @@ import {
     ThunkRecipeAsync,
 } from '~/types'
 
-import { isFunction, isAsyncFunction, immutable, watchUpdates } from '~/util'
+import {
+    isFunction,
+    isAsyncFunction,
+    immutable,
+    resolveGracefully,
+    watchUpdates,
+} from '~/util'
 
 export const composeWithPatches =
     <State extends AnyObject | AnyArray, Args extends AnyArray = unknown[]>(
@@ -26,7 +32,11 @@ export const composeWithPatches =
         const reversed: Patch[] = []
         const deferred: ThunkRecipeAsync<State>[] = []
         for (const recipe of recipes) {
-            const thunk = await recipe
+            const thunk = await resolveGracefully(recipe)
+
+            if (thunk instanceof Error) {
+                return [state, [], []]
+            }
 
             if (thunk === undefined || !isFunction(thunk)) {
                 continue

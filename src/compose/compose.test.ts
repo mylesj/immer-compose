@@ -194,4 +194,30 @@ describe(compose.name, () => {
         jest.runAllTimers()
         expect(await runner).toStrictEqual([1, 3, 2])
     })
+
+    it('should return the initial state for unhandled exceptions', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {
+            /**/
+        })
+
+        const reduce = compose<number[]>(
+            async () => {
+                await delay(100)
+                return (draft) => {
+                    draft.push(1)
+                }
+            },
+            async () => {
+                throw new Error('err')
+                return (draft) => {
+                    draft.push(2)
+                }
+            }
+        )
+
+        const initial: number[] = []
+        const runner = reduce(initial)
+        jest.runAllTimers()
+        expect(await runner).toBe(initial)
+    })
 })
