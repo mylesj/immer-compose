@@ -20,15 +20,12 @@ export type ThunkRecipeAsync<State> = (
     draft: Draft<State>
 ) => Promise<Draft<State> | void>
 
-export declare const compose: <
-    State extends AnyObject | AnyArray,
-    Args extends AnyArray = unknown[]
->(
+export declare const compose: <State, Args extends AnyArray = unknown[]>(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
 ) => Promise<(state: State, ...args: Args[]) => Promise<State>>
 
 export declare const composeWithPatches: <
-    State extends AnyObject | AnyArray,
+    State,
     Args extends AnyArray = unknown[]
 >(
     ...tasks: ComposeTask<ThunkRecipe<State>, State, Args>[]
