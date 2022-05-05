@@ -52,6 +52,8 @@
         "immer": "^9.0.12",
         "jest": "^27.5.1",
         "lint-staged": "^12.3.7",
+        "patch-package": "^6.4.7",
+        "postinstall-postinstall": "^2.1.0",
         "prettier": "^2.6.2",
         "rimraf": "^3.0.2",
         "rollup": "^2.70.1",
