@@ -1,8 +1,10 @@
-export const isObject = (o: unknown): boolean =>
+import { AnyObject, AnyArray, AnyFunction } from '~/types'
+
+export const isObject = (o: unknown): o is AnyObject | AnyArray =>
     o !== null && typeof o === 'object'
 
-export const isFunction = (fn: unknown): boolean => typeof fn === 'function'
+export const isFunction = (fn: unknown): fn is AnyFunction =>
+    typeof fn === 'function'
 
-export const isAsyncFunction = (fn: unknown): boolean =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isFunction(fn) && (fn as any)[Symbol.toStringTag] === 'AsyncFunction'
+export const isAsyncFunction = (fn: unknown): fn is () => unknown =>
+    isFunction(fn) && fn[Symbol.toStringTag] === 'AsyncFunction'

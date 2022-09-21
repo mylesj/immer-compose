@@ -37,7 +37,7 @@ export const composeWithPatches =
                 return [state, [], []]
             }
 
-            if (thunk === undefined || !isFunction(thunk)) {
+            if (!isFunction(thunk)) {
                 continue
             }
 

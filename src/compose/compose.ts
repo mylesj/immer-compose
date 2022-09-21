@@ -32,7 +32,7 @@ export const compose =
                 return state
             }
 
-            if (thunk === undefined || !isFunction(thunk)) {
+            if (!isFunction(thunk)) {
                 continue
             }
 

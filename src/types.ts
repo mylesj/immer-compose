@@ -3,6 +3,14 @@ import { Draft, Patch } from 'immer'
 export type AnyObject = Record<string, unknown>
 export type AnyArray = unknown[]
 
+interface IdentifiableInterface {
+    [Symbol.toStringTag]: string
+}
+
+export interface AnyFunction extends IdentifiableInterface {
+    (): unknown
+}
+
 export type ComposeTask<State, Args extends AnyArray = unknown[]> = (
     initialState: State,
     ...args: Args[]
