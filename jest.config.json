@@ -2,7 +2,9 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "restoreMocks": true,
-    "timers": "modern",
+    "fakeTimers": {
+        "enableGlobally": true
+    },
     "moduleNameMapper": {
         "~/(.*)": "<rootDir>/src/$1"
     },
