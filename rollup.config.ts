@@ -1,7 +1,7 @@
 import { RollupOptions } from 'rollup'
 import typescript from '@rollup/plugin-typescript'
 
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json' }
 
 const config: RollupOptions = {
     input: 'src/module.ts',
